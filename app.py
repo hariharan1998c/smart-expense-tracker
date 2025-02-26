@@ -6,7 +6,7 @@ import json, re
 from flask import send_file
 
 # Configure Gemini API
-genai.configure(api_key="AIzaSyBTv3QN1BoMln2CrGjG_AXc1TNA7ZB5d-g")
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 app = Flask(__name__) # Flask syntax
 
