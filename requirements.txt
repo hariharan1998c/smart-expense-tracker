@@ -1,1 +1,5 @@
-pip install flask google-generativeai sqlite3 matplotlib
+flask
+gunicorn
+matplotlib
+sqlite3
+google-generativeai
