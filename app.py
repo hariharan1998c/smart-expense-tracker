@@ -113,6 +113,12 @@ def expense_chart():
 
     return send_file("static/expense_chart.png", mimetype="image/png") # jsonify({"success": True, "chart_url": "/static/expense_chart.png"})
 
+
+# if __name__ == "__main__":
+#     app.run(debug=True) # Flask syntax
+
+import os
 if __name__ == "__main__":
-    app.run(debug=True) # Flask syntax
+    port = int(os.environ.get("PORT", 10000))  # Get PORT from Render
+    app.run(host="0.0.0.0", port=port)  # Allow external access
 
