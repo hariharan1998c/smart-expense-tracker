@@ -4,6 +4,7 @@ import sqlite3
 import matplotlib.pyplot as plt
 import json, re
 from flask import send_file
+import os
 
 # Configure Gemini API
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
@@ -117,7 +118,6 @@ def expense_chart():
 # if __name__ == "__main__":
 #     app.run(debug=True) # Flask syntax
 
-import os
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))  # Get PORT from Render
     app.run(host="0.0.0.0", port=port)  # Allow external access
