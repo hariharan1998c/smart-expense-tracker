@@ -8,7 +8,6 @@ import os
 
 # Configure Gemini API
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-print(os.getenv("GEMINI_API_KEY"))
 
 app = Flask(__name__) # Flask syntax
 
@@ -32,7 +31,7 @@ init_db()
 # Function to extract structured expense data
 def extract_expense_data(text):
     """Send text to Gemini API and extract structured data."""
-    model = genai.GenerativeModel("gemini-pro")
+    model = genai.GenerativeModel("gemini-1.5-flash-latest")
     response = model.generate_content(f"""Extract structured data from the following expense text. Return only a JSON object with:
 - "price" (numerical value of the expense)
 - "category" (best matching category of the expense)
