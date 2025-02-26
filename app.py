@@ -8,6 +8,7 @@ import os
 
 # Configure Gemini API
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+print(os.getenv("GEMINI_API_KEY"))
 
 app = Flask(__name__) # Flask syntax
 
