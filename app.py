@@ -100,13 +100,21 @@ def expense_chart():
     categories = [row[0] for row in data]
     amounts = [row[1] for row in data]
 
-    plt.figure(figsize=(8, 5))  # Increase figure size
-    plt.bar(categories, amounts, color="skyblue")
-    plt.xlabel("Category")
-    plt.ylabel("Amount Spent (Rs)")
-    plt.title("Expense Analysis")
-    
-    plt.xticks(rotation=45, ha="right")  # Rotate category labels
+    fig, subplt = plt.subplots(1, 2, figsize=(10, 5))
+
+    # Colors for consistency
+    colors = ['#02ffdd', '#00ff00', '#0000ff', '#ffff00']
+
+    # Bar chart
+    subplt[0].bar(categories, amounts, color=colors)
+    subplt[0].set_xlabel("Category")
+    subplt[0].set_ylabel("Amount Spent (Rs)")
+    subplt[0].set_title("Expense Breakdown")
+    subplt[0].tick_params(axis='x', rotation=45)
+
+    # Pie chart
+    subplt[1].pie(amounts, labels=categories, autopct='%1.1f%%', startangle=90, colors=colors)
+    subplt[1].set_title("Expense Distribution")
     plt.tight_layout()  # Adjust spacing to prevent label cutoff
 
     plt.savefig("static/expense_chart.png")
