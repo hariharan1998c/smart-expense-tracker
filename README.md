@@ -34,7 +34,7 @@ The UI consists of:
 
 ## 4. Tools & Technologies Used
 - **Programming Languages:** Python, JavaScript  
-- **Frameworks & Libraries:** Flask, SQLite, Matplotlib, Chart.js  
+- **Frameworks & Libraries:** Flask, SQLite, Matplotlib
 - **API Integration:** Google Gemini API for text processing  
 - **Frontend:** HTML, CSS, JavaScript  
 - **Deployment:** Render (for cloud hosting)  
