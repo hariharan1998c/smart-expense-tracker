@@ -4,14 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Expense Tracker</title>
-    <style>
-        /* body { */
-            /* background-color: black; */
-            /* color: white; Ensures text is visible on a black background */
-        /* }  */
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    <div class="container">
     <h2>Enter Your Expense</h2>
     <input type="text" id="expenseInput" placeholder="Example: I spent 20rs on chocolate">
     <button onclick="sendExpense()">Submit</button>
@@ -19,7 +15,8 @@
 
     <h2>Expense Chart</h2>
     <img id="chartImage" src="/expense_chart" style="width: 400px;">
-
+    </div>
+    
     <script>
         function sendExpense() {
             let text = document.getElementById("expenseInput").value;
@@ -35,6 +32,7 @@
                     document.getElementById("chartImage").src = "/expense_chart?" + new Date().getTime(); 
                 } else {
                     document.getElementById("result").innerText = "Error processing expense.";
+                    document.getElementById("result").style.color = "#e74c3c"; 
                 }
             });
         }
