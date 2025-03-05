@@ -20,7 +20,9 @@ Smart Expense Tracker is a web-based application that helps users track their da
 ## 3. User Interface
 Below is a screenshot of the web interface:
 
-![image](https://github.com/user-attachments/assets/e5a525fb-d1fb-4d62-92d3-7d8f10f50a70)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/e5a525fb-d1fb-4d62-92d3-7d8f10f50a70" width="400px">
+</p>
 
 
 The UI consists of:  
@@ -67,13 +69,22 @@ pip install -r requirements.txt
   GEMINI_API_KEY=your_api_key_here
   ```
 
-#### 4️⃣ Run the Application
+#### 4️⃣ Run the Application Locally
 ```bash
 python app.py
 ```
 The server should start at: **http://127.0.0.1:5000/**  
 
+#### 5️⃣ Running on Render (Cloud Deployment)
+Render assigns a dynamic port, so ensure your Flask app is set up to listen on the correct port:
+```python
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
+```
+
 ---
+
 
 ## 6. Usage Guide
 
