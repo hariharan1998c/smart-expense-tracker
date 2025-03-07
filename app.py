@@ -4,8 +4,8 @@ import sqlite3
 import matplotlib.pyplot as plt
 import json, re
 from flask import send_file
+import os
 from twilio.rest import Client
-
 
 # Configure Gemini API
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
@@ -32,7 +32,7 @@ init_db()
 # Function to extract structured expense data
 def extract_expense_data(text):
     """Send text to Gemini API and extract structured data."""
-    model = genai.GenerativeModel("gemini-1.5-flash-latest") # API call to gemini
+    model = genai.GenerativeModel("gemini-1.5-flash-latest")
     response = model.generate_content(f"""Extract structured data from the following expense text. Return only a JSON object with:
 - "price" (numerical value of the expense)
 - "category" (best matching category of the expense)
@@ -100,11 +100,11 @@ def expense_chart():
     # Create bar chart
     categories = [row[0] for row in data]
     amounts = [row[1] for row in data]
-    # Create figure with 2 subplots
+
     fig, subplt = plt.subplots(1, 2, figsize=(10, 5))
 
     # Colors for consistency
-    colors = ['#02ffdd', '#00ff00', '#0000ff', '#ffff00'] # HEXADECIMAL VALUE FOR COLOR
+    colors = ['#02ffdd', '#00ff00', '#0000ff', '#ffff00']
 
     # Bar chart
     subplt[0].bar(categories, amounts, color=colors)
@@ -122,6 +122,9 @@ def expense_chart():
     plt.close()
 
     return send_file("static/expense_chart.png", mimetype="image/png") # jsonify({"success": True, "chart_url": "/static/expense_chart.png"})
+
+
+
 
 
 
@@ -205,11 +208,9 @@ def whatsapp_webhook():
 
 
 
+# if __name__ == "__main__":
+#     app.run(debug=True) # Flask syntax
 
 if __name__ == "__main__":
-    app.run(debug=True) # Flask syntax
-
-# import os
-# if __name__ == "__main__":
-#     port = int(os.environ.get("PORT", 10000))  # Get PORT from Render
-#     app.run(host="0.0.0.0", port=port)  # Allow external access
+    port = int(os.environ.get("PORT", 10000))  # Get PORT from Render
+    app.run(host="0.0.0.0", port=port)  # Allow external access
