@@ -154,7 +154,7 @@ client = Client(TWILIO_SID, TWILIO_AUTH_TOKEN)
 def generate_and_send_chart(user_number):
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
-    cursor.execute("SELECT category, SUM(price) where phone_number = ? FROM expenses GROUP BY category",
+    cursor.execute("SELECT category, SUM(price) FROM expenses where phone_number = ? GROUP BY category",
                    user_number)
     data = cursor.fetchall()
     conn.close()
