@@ -155,7 +155,7 @@ def generate_and_send_chart(user_number):
     conn = sqlite3.connect("expenses.db")
     cursor = conn.cursor()
     cursor.execute("SELECT category, SUM(price) FROM expenses where phone_number = ? GROUP BY category",
-                   (user_number))
+                   (user_number,))
     data = cursor.fetchall()
     conn.close()
 
