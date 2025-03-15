@@ -130,6 +130,9 @@ def expense_chart():
     subplt[1].pie(amounts, labels=categories, autopct='%1.1f%%', startangle=90, colors=colors)
     subplt[1].set_title("Expense Distribution")
 
+    # Add watermark
+    fig.text(0.99, 0.01, "Developed by Hariharan C", fontsize=15, color="gray", ha="right", alpha=0.5)
+    
     plt.tight_layout()  # Automatically fixes spacing issues
 
     plt.savefig("static/expense_chart.png")
@@ -187,6 +190,9 @@ def generate_and_send_chart(user_number):
 
     subplt[1].pie(amounts, labels=categories, autopct='%1.1f%%', startangle=90, colors=colors)
     subplt[1].set_title("Expense Distribution")
+
+    # Add watermark
+    fig.text(0.99, 0.01, "Developed by Hariharan C", fontsize=15, color="gray", ha="right", alpha=0.5)
     
     plt.tight_layout()
     chart_path = "static/expense_chart.png"
