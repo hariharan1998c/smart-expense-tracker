@@ -29,12 +29,12 @@ All expenses are stored in an **SQLite database** and visualized with **bar and 
 
 ### 🔹 Web Interface for Logging Expenses
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/a104f881-74d5-44ab-bfc3-99c3b435ba84" width="400px">
+  <img src="https://github.com/user-attachments/assets/10a0c5dd-4250-49d9-8d17-4c1b4388d12f" width="400px">
 </p>
 
 ### 🔹 WhatsApp Bot for Quick Expense Logging
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/e759cac2-8779-498b-993d-419e4902902a" width="400px">
+  <img src="https://github.com/user-attachments/assets/fa53cfca-4fe8-4881-8702-7ca737ad20e1" width="400px">
 </p>
 ---
 
