@@ -11,7 +11,8 @@ Using **Google Gemini API**, the system extracts structured financial data from 
 
 All expenses are stored in an **SQLite database** and visualized with **bar and pie charts** for clear insights.
 
-### 🌐 Live Demo: [Smart Expense Tracker](https://smart-expense-tracker-7xwa.onrender.com/)
+### 🌐 Live Demo: [Smart Expense Tracker](https://smart-expense-tracker-7xwa.onrender.com/) 
+(Wait ~30 sec for initial load as Render may take time after inactivity.)
 
 ---
 
