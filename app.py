@@ -228,6 +228,7 @@ def whatsapp_webhook():
 
     if expense_data:
         expense_data["description"] = incoming_msg
+        expense_data["phone_number"] = sender_number
         expenses_collection.insert_one(expense_data)
 
         # Generate and send the expense chart to the sender
