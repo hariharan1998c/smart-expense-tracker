@@ -3,3 +3,4 @@ gunicorn
 matplotlib
 google-generativeai
 twilio
+pymongo
