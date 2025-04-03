@@ -206,7 +206,7 @@ def generate_and_send_chart(user_number):
     plt.close()
 
     # Host the image on Render
-    hosted_image_url = "https://smart-expense-tracker-7xwa.onrender.com/static/expense_chart.png"
+    hosted_image_url = "https://smart-expense-tracker-production-b185.up.railway.app/static/expense_chart.png"
 
     # Send the image to the same user who sent the expense message
     client.messages.create(
