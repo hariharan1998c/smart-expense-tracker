@@ -6,30 +6,39 @@ import json, re
 from flask import send_file
 import os
 from twilio.rest import Client
+from pymongo import MongoClient
 
 # Configure Gemini API
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
+
+# Configure MongoDB Atlas
+MONGO_URI = os.getenv("MONGO_URI")
+client = MongoClient(MONGO_URI)
+db = client.expense_tracker  # Reference to a database (not created yet for the first time)
+expenses_collection = db.expenses # Reference to a collection (not created yet for the first time)
+
+
 app = Flask(__name__) # Flask syntax
 
-# Initialize SQLite DB
-def init_db():
-    conn = sqlite3.connect("expenses.db") # establishing connection wrt database named expense.db
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS expenses (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            phone_number TEXT,
-            description TEXT,
-            price REAL,
-            category TEXT,
-            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
-    conn.commit()
-    conn.close()
+# # Initialize SQLite DB  ==> now using mongoDB for better
+# def init_db():
+#     conn = sqlite3.connect("expenses.db") # establishing connection wrt database named expense.db
+#     cursor = conn.cursor()
+#     cursor.execute('''
+#         CREATE TABLE IF NOT EXISTS expenses (
+#             id INTEGER PRIMARY KEY AUTOINCREMENT,
+#             phone_number TEXT,
+#             description TEXT,
+#             price REAL,
+#             category TEXT,
+#             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+#         )
+#     ''')
+#     conn.commit()
+#     conn.close()
 
-init_db()
+# init_db()
 
 
 # Function to extract structured (dictionary format) expense data from text input
@@ -78,32 +87,30 @@ def add_expense(): # handles POST request from url localhost:5000/add_expense
     # expense_data is dict | Eg. {'price': '20', 'category': 'food'}
 
     if expense_data:
-        conn = sqlite3.connect("expenses.db")
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO expenses (description, price, category) VALUES (?, ?, ?)",
-                       (text, expense_data["price"], expense_data["category"]))
-        conn.commit()
-        conn.close()
-
-        return jsonify({"success": True, "message": "Expense added!", "data": expense_data})
+        expense_data["description"] = text
+        expenses_collection.insert_one(expense_data)
+        expense_data["_id"] = str(expense_data["_id"])  # Convert ObjectId to string for JSONify
+        return jsonify({"success": True, "message": "Expense added!"})
     
     return jsonify({"success": False, "message": "Failed to extract expense data"})
 
+
+
+import matplotlib
+matplotlib.use('Agg')  # Fixes Tkinter issue
 # Route: Generate Expense Analysis Chart
 @app.route("/expense_chart")
 def expense_chart():
-    conn = sqlite3.connect("expenses.db")
-    cursor = conn.cursor()
-    cursor.execute("SELECT category, SUM(price) FROM expenses GROUP BY category")
-    data = cursor.fetchall()
-    conn.close()
+    data = list(expenses_collection.aggregate([
+        {"$group": {"_id": "$category", "price_sum": {"$sum": "$price"}}}
+    ]))
 
     if not data:
         return jsonify({"success": False, "message": "No expense data available"})
-
+    
     # Create bar chart
-    categories = [row[0] for row in data]
-    amounts = [row[1] for row in data]
+    categories = [row["_id"] for row in data]
+    amounts = [row["price_sum"] for row in data]
     # Create figure with 2 subplots
     fig, subplt = plt.subplots(1, 2, figsize=(10, 5))
 
@@ -155,18 +162,16 @@ client = Client(TWILIO_SID, TWILIO_AUTH_TOKEN)
 
 # Function to generate and send the expense chart to the sender
 def generate_and_send_chart(user_number):
-    conn = sqlite3.connect("expenses.db")
-    cursor = conn.cursor()
-    cursor.execute("SELECT category, SUM(price) FROM expenses where phone_number = ? GROUP BY category",
-                   (user_number,))
-    data = cursor.fetchall()
-    conn.close()
+    data = list(expenses_collection.aggregate([
+        {"$group": {"_id": "$category", "price_sum": {"$sum": "$price"}}}
+    ]))
 
     if not data:
-        return None
-
-    categories = [row[0] for row in data]
-    amounts = [row[1] for row in data]
+        return jsonify({"success": False, "message": "No expense data available"})
+    
+    # Create bar chart
+    categories = [row["_id"] for row in data]
+    amounts = [row["price_sum"] for row in data]
 
     fig, subplt = plt.subplots(1, 2, figsize=(10, 5))
     colors = ['#02ffdd', '#00ff00', '#0000ff', '#ffff00']
@@ -222,12 +227,8 @@ def whatsapp_webhook():
     expense_data = extract_expense_data(incoming_msg)
 
     if expense_data:
-        conn = sqlite3.connect("expenses.db")
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO expenses (description, price, category, phone_number) VALUES (?, ?, ?, ?)",
-                       (incoming_msg, expense_data["price"], expense_data["category"], sender_number))
-        conn.commit()
-        conn.close()
+        expense_data["description"] = incoming_msg
+        expenses_collection.insert_one(expense_data)
 
         # Generate and send the expense chart to the sender
         generate_and_send_chart(sender_number)
