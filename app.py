@@ -163,7 +163,8 @@ client = Client(TWILIO_SID, TWILIO_AUTH_TOKEN)
 # Function to generate and send the expense chart to the sender
 def generate_and_send_chart(user_number):
     data = list(expenses_collection.aggregate([
-        {"$group": {"_id": "$category", "price_sum": {"$sum": "$price"}}}
+    {"$match": {"phone_number": user_number}},  # Filter by phone_number
+    {"$group": {"_id": "$category", "price_sum": {"$sum": "$price"}}}  # Group by category & sum price
     ]))
 
     if not data:
