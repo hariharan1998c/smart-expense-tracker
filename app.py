@@ -43,8 +43,10 @@ app = Flask(__name__) # Flask syntax
 
 # Function to extract structured (dictionary format) expense data from text input
 def extract_expense_data(text):
-    model = genai.GenerativeModel("gemini-1.5-flash-latest") # API call to gemini
-    response = model.generate_content(f"""Extract structured data from the following expense text. Return only a JSON object with:
+    model_name = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+    model = genai.GenerativeModel(model_name) # API call to gemini
+    try:
+        response = model.generate_content(f"""Extract structured data from the following expense text. Return only a JSON object with:
 - "price" (numerical value of the expense in Rupees)
 - "category" (best matching category of the expense)
 
@@ -55,6 +57,9 @@ If no suitable category matches, use "Miscellaneous".
 Ensure the response is valid JSON with no extra text.
 
 Expense text: {text}""") # API call to gemini # sending a prompt
+    except Exception as exc:
+        print(f"Gemini API error using model {model_name}: {exc}")
+        return None
     
     print(text, response)
     # Extract the text part from response
